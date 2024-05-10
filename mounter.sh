@@ -21,16 +21,14 @@ if [ $job == 1 ];then
 	echo "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+"
 
 	read -p "Enter DEVICE name like [sda1]: " device
-	read -p "Enter NAME for device like [Local Disk]:" name
 
 	if [ -b /dev/$device  ];then
 
-		if [ -d "/run/media/user/$name" ];then
-			echo "file exist !"
+		if  mount | grep /dev/$device > /dev/null;then
+			echo "this device is mounte !"
 
 		else
-			sudo mkdir -p /run/media/user/$name
-			sudo mount /dev/$device /run/media/user/$name -o noatime,noexec
+			udisksctl mount -b /dev/$device  -o noatime,noexec
 
 			clear
 
@@ -43,6 +41,8 @@ if [ $job == 1 ];then
 	fi
 
 elif [ $job == 2 ];then
+	
+	clear
 
 	echo "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+"
 	/usr/bin/lsblk
@@ -54,8 +54,7 @@ elif [ $job == 2 ];then
 
 		if  mount | grep /dev/$device > /dev/null ;then
 
-			sudo umount /dev/$device
-			sudo rm -r /run/media/user
+			udisksctl unmount -b /dev/$device
 
 			clear
 
